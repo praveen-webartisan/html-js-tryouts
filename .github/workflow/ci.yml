@@ -1,11 +1,9 @@
 name: My first CI/CD
-
 on:
   push:
     branches: [master]
-
 jobs:
-  Test Action:
+  Test-Action:
     runs-on: ubuntu-latest
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
