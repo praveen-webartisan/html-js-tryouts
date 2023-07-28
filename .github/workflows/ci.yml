@@ -7,12 +7,16 @@ jobs:
       - name: Cloning the Repo
         uses: actions/checkout@v3
 
-      - name: Moving code to ${{ secrets.AWS_HOST_IP }}
-        uses: appleboy/scp-action@v0.1.4
-        with:
-          host: ${{ secrets.AWS_HOST_IP }}
-          username: ${{ secrets.AWS_HOST_USERNAME }}
-          password: ${{ secrets.AWS_HOST_PRIVATE_KEY }}
-          port: 22
-          source: "*"
-          target: "/var/www/html/"
+      - name: Getting PWD
+        run: pwd
+        run: ls -l
+
+      # - name: Moving code to ${{ secrets.AWS_HOST_IP }}
+      #   uses: appleboy/scp-action@v0.1.4
+      #   with:
+      #     host: ${{ secrets.AWS_HOST_IP }}
+      #     username: ${{ secrets.AWS_HOST_USERNAME }}
+      #     password: ${{ secrets.AWS_HOST_PRIVATE_KEY }}
+      #     port: 22
+      #     source: "*"
+      #     target: "/var/www/html/"
