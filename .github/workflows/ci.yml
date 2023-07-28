@@ -12,7 +12,6 @@ jobs:
         with:
           host: ${{ secrets.AWS_HOST_IP }}
           username: ${{ secrets.AWS_HOST_USERNAME }}
-          passphrase: ${{ secrets.AWS_HOST_PRIVATE_KEY }}
-          port: 22
+          key: ${{ secrets.AWS_HOST_PRIVATE_KEY }}
           source: "./"
           target: "/var/www/html/"
