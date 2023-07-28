@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <title>My HTML, JavaScript Tryouts</title>
+
+        <style type="text/css">
+            html {
+                font-family: Ubuntu;
+            }
+
+            #list ul {
+                list-style-type: none;
+                padding-left: 0;
+            }
+
+            #list ul li {
+                margin-bottom: 0.5em;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>My HTML, JavaScript Tryouts:</h1>
+
+        <hr>
+
+        <div id="list">Loading...</div>
+
+        <hr>
+
+        <script type="text/javascript">
+            (async() => {
+                const repoName = 'html-js-tryouts';
+                let htmlString = '';
+                const response = await fetch(`https://api.github.com/repos/praveen-webartisan/${repoName}/contents/`);
+
+                if (response && response.status === 200) {
+                    const data = await response.json();
+
+                    if (data && Array.isArray(data)) {
+                        htmlString = '<ul>'
+
+                        for (let file of data) {
+                            if (file.type === 'file' && file.path != 'index.html') {
+                                htmlString += `<li><a href="${file.path}">${file.name}</a></li>`;
+                            }
+                        }
+
+                        htmlString += '</ul>';
+                    }
+                }
+
+                document.getElementById('list').innerHTML = htmlString;
+            })();
+        </script>
+    </body>
+</html>

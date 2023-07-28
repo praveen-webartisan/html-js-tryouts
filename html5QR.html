@@ -1,0 +1,306 @@
+<html>
+    <head>
+        <title>HTML 5 - QR</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <style type="text/css">
+            html, body {
+                padding: 0;
+                margin: 0;
+                width: 100%;
+                height: 100%;
+                font-family: Ubuntu;
+            }
+
+            *.hide {
+                display: none !important;
+            }
+
+            #pageContent {
+                width: 100%;
+                min-height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                margin-top: 1rem;
+            }
+
+            #output {
+                margin-bottom: 1em;
+            }
+
+            #reader {
+                width: 50vw;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 1rem;
+            }
+
+            #reader #reader-buttons {
+                width: 100%;
+                margin-top: 1em;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            #reader #reader-buttons #sliderParent {
+                margin-top: 2em;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            #reader #reader-camera-view {
+                width: 100%;
+                flex-grow: 1;
+                overflow: hidden;
+            }
+
+            #reader #reader-camera-view > video {
+                object-fit: cover;
+            }
+
+            #info {
+                margin-top: 2em;
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+            }
+
+            #info > * {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 1em;
+            }
+
+            #floatingButtons {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: fixed;
+                right: 1rem;
+                bottom: 1rem;
+            }
+
+            #floatingButtons > button {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 3rem;
+                height: 3rem;
+                background-color: #000;
+                color: #fff;
+                border-radius: 50%;
+                font-size: 2em;
+                cursor: pointer;
+            }
+
+            #btnTorch.switched-on .when-off {
+                display: none !important;
+            }
+
+            #btnTorch:not(.switched-on) .when-on {
+                display: none !important;
+            }
+
+            @media only screen and (max-width: 768px) {
+                #reader {
+                    width: 100%;
+                }
+            }
+        </style>
+
+        <script type="text/javascript" src="assets/js/html5-qrcode.min.js"></script>
+        <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+    </head>
+    <body>
+
+        <div id="pageContent">
+            <div id="output"></div>
+
+            <div id="reader">
+                <div id="reader-camera-view"></div>
+                <div id="reader-buttons">
+                    <button id="btnStartScanner">Start Scanner</button>
+                    <button id="btnStopScanner" class="hide">Stop Scanner</button>
+                    <span id="sliderParent" class="hide">
+                        <span>Zoom: &ensp;<input type="range" id="cameraSlider" />&ensp; <span id="cameraSlider-value">1</span></span>
+                    </span>
+                    <span id="info">
+                        <span>Zoom feature supported: &ensp;<span id="zoom"></span></span>
+                        <span>Max Framerate supported: &ensp;<span id="maxFR"></span></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div id="floatingButtons">
+            <button id="btnTorch" class="hide">
+                <svg class="when-off" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em"><path fill="currentcolor" d="M316-64v-456l-91-133v-243h510v243l-91 133v456H316Zm164.118-254Q456-318 439-334.882q-17-16.883-17-41Q422-400 438.882-417q16.883-17 41-17Q504-434 521-417.118q17 16.883 17 41Q538-352 521.118-335q-16.883 17-41 17ZM298-773h364v-50H298v50Zm364 73H298v29l91 132.19V-137h182v-401.81L662-671v-29ZM480-467Z"/></svg>
+
+                <svg class="when-on" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 -960 960 960" width="1em"><path fill="currentcolor" d="M802-91 661-232v168H334v-495L52-841l52-52 749 750-51 52Zm-395-46h181v-168L407-486v349Zm254-277-73-74v-51l91-132v-29H376l-73-73h376v-51H308v56l-65-65v-64h509v244l-91 133v106Zm-163 18Zm0-183Z"/></svg>
+            </button>
+        </div>
+
+        <script type="text/javascript">
+            var qrScanner, zoomCapability;
+
+            function onScanSuccess(decodedText, decodedResult) {
+                $('#output').html(`<b>Decoded Text:</b> <pre>${decodedText}</pre>`);
+
+                console.log('decodedResult:', decodedResult);
+
+                stopScanner();
+            }
+
+            function onScanFailed(error) {
+                $('#output').html(`ERROR OCCURRED.`);
+
+                console.error('Error occurred:', error);
+            }
+
+            function startScanner() {
+                qrScanner = new Html5Qrcode("reader-camera-view");
+
+                let qrBoxWidth = $('#reader-camera-view').width() * 0.7;
+
+                qrScanner.start({
+                    facingMode: 'environment',
+                }, {
+                    fps: 100,
+                    qrbox: {
+                        width: qrBoxWidth,
+                        height: qrBoxWidth,
+                    },
+                    formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ],
+                    rememberLastUsedCamera: true,
+                }, onScanSuccess).then(() => {
+                    setTimeout(() => {
+                        $('#output').html('');
+
+                        $('#btnStartScanner').addClass('hide');
+                        $('#btnStopScanner').removeClass('hide');
+
+                        $('#maxFR').html(qrScanner.getRunningTrackCapabilities().frameRate?.max);
+
+                        let zoomFeature = getCameraFeature('zoom');
+
+                        if (zoomFeature) {
+                            $('#zoom').html(`Yes. Min: ${zoomCapability.min()}, Max: ${zoomCapability.max()}`);
+
+                            $('#cameraSlider').attr('min', zoomCapability.min());
+                            $('#cameraSlider').attr('max', zoomCapability.max());
+
+                            $('#cameraSlider').val(zoomCapability.min());
+
+                            $('#sliderParent').removeClass('hide');
+                        } else {
+                            $('#zoom').html('No.');
+                        }
+
+                        let torchFeature = getCameraFeature('torch');
+
+                        if (torchFeature) {
+                            $('#btnTorch').removeClass('hide');
+                        } else {
+                            $('#btnTorch').addClass('hide');
+                        }
+                    }, 500);
+                });
+            }
+
+            function stopScanner() {
+                qrScanner.stop()
+                    .then(ignore => {
+                        $('#cameraSlider').val($('#cameraSlider').attr('min')).trigger('change');
+                        $('#sliderParent').addClass('hide');
+                        $('#btnStopScanner').addClass('hide');
+                        $('#btnTorch').addClass('hide');
+                        $('#btnStartScanner').removeClass('hide');
+                    })
+                    .catch(err => {
+                        console.error('Error occurred when stopping QR scanner:');
+                        console.error(err);
+                    });
+            }
+
+            function getCameraFeature(type) {
+                let feature;
+
+                if (qrScanner && qrScanner.renderedCamera) {
+                    let cameraCapabilities = qrScanner.renderedCamera.getCapabilities();
+
+                    if (cameraCapabilities) {
+                        if (type === 'zoom') {
+                            if (cameraCapabilities.zoomFeature) {
+                                zoomCapability = cameraCapabilities.zoomFeature();
+
+                                if (zoomCapability && zoomCapability.isSupported()) {
+                                    feature = zoomCapability;
+                                }
+                            }
+                        } else if (type === 'torch') {
+                            if (cameraCapabilities.torchFeature) {
+                                torchCapability = cameraCapabilities.torchFeature();
+
+                                if (torchCapability && torchCapability.isSupported()) {
+                                    feature = torchCapability;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return feature;
+            }
+
+            $(document).on('click', '#btnStartScanner', function() {
+                startScanner();
+            });
+
+            $(document).on('click', '#btnStopScanner', function() {
+                stopScanner();
+            });
+
+            $(document).on('change', '#cameraSlider', function() {
+                $('#cameraSlider-value').html($(this).val());
+
+                let zoomFeature = getCameraFeature('zoom');
+
+                if (zoomFeature) {
+                    zoomFeature.apply($(this).val());
+                }
+            });
+
+            $(document).on('click', '#btnTorch', function() {
+                let torchFeature = getCameraFeature('torch');
+
+                if (torchFeature) {
+                    if ($(this).hasClass('switched-on')) {
+                        torchFeature.apply(false);
+
+                        $(this).removeClass('switched-on');
+                    } else {
+                        torchFeature.apply(true);
+
+                        $(this).addClass('switched-on');
+                    }
+                }
+            });
+
+            $(document).ready(function() {
+                //
+            });
+        </script>
+
+    </body>
+</html>

@@ -1,0 +1,201 @@
+<html>
+    <head>
+        <title>HTML 5 - QR</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <style type="text/css">
+            html, body {
+                padding: 0;
+                margin: 0;
+                width: 100%;
+                height: 100%;
+                font-family: Ubuntu;
+            }
+
+            *.hide {
+                display: none !important;
+            }
+
+            #pageContent {
+                width: 100%;
+                min-height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            #output {
+                margin-bottom: 1em;
+            }
+
+            #reader {
+                width: 50vw;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            #reader #reader-buttons {
+                width: 100%;
+                margin-bottom: 1em;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            #reader #reader-buttons > div {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            #reader #reader-buttons #cameraSelectionContainer {
+                margin-bottom: 1em;
+            }
+
+            #reader #reader-buttons #sliderParent {
+                margin-top: 1em;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            #reader #reader-camera-view {
+                width: 100%;
+                flex-grow: 1;
+                overflow: hidden;
+                position: relative;
+            }
+
+            #reader #reader-camera-view > video {
+                width: 100%;
+                object-fit: cover;
+                max-height: 80vh;
+            }
+
+            @media only screen and (max-width: 768px) {
+                #reader {
+                    width: 100%;
+                }
+            }
+        </style>
+
+        <script type="text/javascript" src="assets/js/qr-scanner.umd.min.js"></script>
+        <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+    </head>
+    <body>
+
+        <div id="pageContent">
+            <div id="output"></div>
+
+            <div id="reader">
+                <div id="reader-buttons">
+                    <span id="cameraSelectionContainer">
+                        Camera: <select id="camera"></select>
+                    </span>
+                    <div id="show-when-scanning" class="hide">
+                        <button id="btnStopScanner">Stop Scanner</button>
+                        <span id="sliderParent" class="hide">Zoom: <input type="range" min="1" max="10" value="1" id="cameraSlider" /></span>
+                    </div>
+                    <div id="show-when-not-scanning">
+                        <button id="btnStartScanner">Start Scanner</button>
+                    </div>
+                </div>
+
+                <div id="reader-camera-view">
+                    <video id="render-video"></video>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            var qrScanner;
+
+            function onScanSuccess(result) {
+                let outputContent = '';
+
+                if (result && result.data) {
+                    outputContent = result.data;
+
+                    qrScanner.stop();
+
+                    onScannerStopped();
+                }
+
+                $('#output').html(`<pre>${outputContent}</pre>`);
+            }
+
+            function onScannerStarted() {
+                $('#output').html('');
+
+                $('#show-when-not-scanning').addClass('hide');
+                $('#show-when-scanning').removeClass('hide');
+            }
+
+            function onScannerStopped() {
+                $('#show-when-scanning').addClass('hide');
+                $('#show-when-not-scanning').removeClass('hide');
+            }
+
+            $(document).on('click', '#btnStartScanner', function(e) {
+                e.preventDefault();
+
+                if (qrScanner) {
+                    qrScanner.start();
+
+                    onScannerStarted();
+                }
+            });
+
+            $(document).on('click', '#btnStopScanner', function(e) {
+                e.preventDefault();
+
+                if (qrScanner) {
+                    qrScanner.stop();
+
+                    onScannerStopped();
+                }
+            });
+
+            $(document).on('change', '#camera', function() {
+                let cameraId = $(this).val();
+
+                if (cameraId && qrScanner) {
+                    qrScanner.setCamera(cameraId);
+                }
+            });
+
+            $(document).ready(function() {
+                qrScanner = new QrScanner(
+                    $('#render-video')[0], 
+                    result => onScanSuccess(result),
+                    {
+                        highlightScanRegion: true,
+                        highlightCodeOutline: true,
+                        onDecodeError: error => {
+                            // console.log('decode error:', error);
+                        },
+                    }
+                );
+
+                QrScanner.listCameras().then(cameras => {
+                    if (cameras && Array.isArray(cameras) && cameras.length > 0) {
+                        let cameraOptions = '';
+
+                        cameras.map((cam, index) => {
+                            cameraOptions += `<option value="${cam.id}">` + (cam.label || ('Camera ' + (index + 1))) + `</option>`;
+                        });
+
+                        $('#camera').html(cameraOptions);
+                    }
+                });
+            });
+        </script>
+
+    </body>
+</html>
