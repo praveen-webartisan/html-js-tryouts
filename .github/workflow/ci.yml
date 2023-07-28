@@ -1,7 +1,5 @@
-name: My first CI/CD
-on:
-  push:
-    branches: [master]
+name: My First CI-CD
+on: [push]
 jobs:
   Test-Action:
     runs-on: ubuntu-latest
