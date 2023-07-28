@@ -12,7 +12,7 @@ jobs:
         with:
           host: ${{ secrets.AWS_HOST_IP }}
           username: ${{ secrets.AWS_HOST_USERNAME }}
-          password: ${{ secrets.AWS_HOST_PRIVATE_KEY }}
+          passphrase: ${{ secrets.AWS_HOST_PRIVATE_KEY }}
           port: 22
           source: "./"
           target: "/var/www/html/"
