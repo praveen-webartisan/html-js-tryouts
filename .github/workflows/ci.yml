@@ -9,6 +9,7 @@ jobs:
 
       - name: Getting PWD
         run: pwd
+      - name: Getting List of files
         run: ls -l
 
       # - name: Moving code to ${{ secrets.AWS_HOST_IP }}
