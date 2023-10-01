@@ -1,0 +1,289 @@
+<html>
+    <head>
+        <title>Morse code Translator</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <meta name="keywords" content="Morse code, Decoder, Translator">
+
+        <meta name="author" content="PraveenWebartisan">
+        <meta name="description" content="Decode Morse code">
+
+        <link rel="stylesheet" href="assets/css/bulma.min.css" />
+        <link rel="stylesheet" href="assets/css/icons/icofont/icofont.min.css" />
+
+        <style type="text/css">
+            @font-face {
+                font-family: 'AppFont';
+                src: url('assets/css/fonts/SofiaSans-Regular.ttf');
+            }
+
+            html, body {
+                padding: 0;
+                margin: 0;
+                width: 100%;
+                height: 100%;
+                font-family: 'AppFont';
+            }
+
+            *.hide {
+                display: none !important;
+            }
+
+            .field:not(.is-invalid) .help {
+                display: none;
+            }
+
+            .cursor-pointer {
+                cursor: pointer !important;
+            }
+
+            #btnSpeakMorseCode.is-playing {
+                color: #00d1b2 !important;
+            }
+
+            #btnSpeakMorseCode.is-playing > i:not(.when-playing) {
+                display: none;
+            }
+
+            #btnSpeakMorseCode:not(.is-playing) {
+                cursor: pointer;
+                color: #485fc7 !important;
+            }
+
+            #btnSpeakMorseCode:not(.is-playing) > .when-playing {
+                display: none;
+            }
+
+            #btnSpeakMorseCode:hover {
+                color: #4a4a4a !important;
+            }
+
+            #pageContent {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                width: 100%;
+                min-height: 100%;
+            }
+
+            .section {
+                width: 100%;
+            }
+
+            #pageFooter {
+                padding: 3rem 1.5rem 3rem;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div id="pageContent">
+            <section class="section">
+                <div class="container">
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field">
+                                <div class="control">
+                                    <label class="label">
+                                        <span>Morse code</span>
+                                        <span class="is-inline-block is-pulled-right hide" id="btnSpeakMorseCode">
+                                            <i class="icofont-ui-volume" title="Play the Morse code"></i>
+                                            <i class="icofont-sound-wave-alt when-playing" title="The Morse code is playing..."></i>
+                                        </span>
+                                    </label>
+                                    <textarea class="textarea" rows="12" id="txtMorseCode" placeholder="Enter Morse code here..." autofocus></textarea>
+                                </div>
+
+                                <p class="help is-danger">Invalid Morse code</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="columns mt-4">
+                        <div class="column">
+                            <div class="card">
+                                <header class="card-header">
+                                    <p class="card-header-title title is-5">Here is the Translation:</p>
+                                </header>
+
+                                <div class="card-content">
+                                    <div class="content">
+                                        <div id="output"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer id="pageFooter" class="footer">
+                <div class="content has-text-centered">
+                    <p>
+                        Developed by <a href="https://praveen-webartisan.github.io" target="_blank">Praveen WebArtisan</a>.
+                    </p>
+                </div>
+            </footer>
+        </div>
+
+        <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+        <script type="text/javascript" src="assets/js/bulma.js"></script>
+        <script type="text/javascript">
+            const MORSE_SOUND_EFFECT = {
+                '.': 'morse-code-dit.mp3',
+                '-': 'morse-code-dash.mp3',
+            };
+            let playingAudio, playingLetterIndex = -1;
+
+            function isValidMorseCode(morseCode) {
+                return !(new RegExp(/[^\.\-\ ]/)).test(morseCode);
+            }
+
+            function decodeMorseCode(morseCode) {
+                const MORSE_CHART = {
+                    '.-'   : 'A',
+                    '-...' : 'B',
+                    '-.-.' : 'C',
+                    '-..'  : 'D',
+                    '.'    : 'E',
+                    '..-.' : 'F',
+                    '--.'  : 'G',
+                    '....' : 'H',
+                    '..'   : 'I',
+                    '.---' : 'J',
+                    '-.-'  : 'K',
+                    '.-..' : 'L',
+                    '--'   : 'M',
+                    '-.'   : 'N',
+                    '---'  : 'O',
+                    '.--.' : 'P',
+                    '--.-' : 'Q',
+                    '.-.'  : 'R',
+                    '...'  : 'S',
+                    '-'    : 'T',
+                    '..-'  : 'U',
+                    '...-' : 'V',
+                    '.--'  : 'W',
+                    '-..-' : 'X',
+                    '-.--' : 'Y',
+                    '--..' : 'Z',
+                    '-----': '0',
+                    '.----': '1',
+                    '..---': '2',
+                    '...--': '3',
+                    '....-': '4',
+                    '.....': '5',
+                    '-....': '6',
+                    '--...': '7',
+                    '---..': '8',
+                    '----.': '9',
+                };
+
+                let decodedText = '';
+
+                morseCode.split(' ').map((letter) => {
+                    if (letter) {
+                        if (letter in MORSE_CHART) {
+                            decodedText += MORSE_CHART[letter];
+                        } else {
+                            decodedText = false;
+                            return;
+                        }
+                    }
+                });
+
+                return decodedText;
+            }
+
+            $(document).on('input', '#txtMorseCode', function() {
+                let morseCode = $(this).val();
+
+                if (typeof(playingAudio) != 'undefined') {
+                    playingAudio.pause();
+
+                    playingAudio = undefined;
+                }
+
+                $('#output').html('');
+                $('#txtMorseCode').removeClass('is-danger');
+                $('#txtMorseCode').closest('.field').removeClass('is-invalid');
+                $('#btnSpeakMorseCode').removeClass('is-playing');
+                $('#btnSpeakMorseCode').addClass('hide');
+
+                if (morseCode) {
+                    if (isValidMorseCode(morseCode)) {
+                        const decodedText = decodeMorseCode(morseCode);
+
+                        if (decodedText === false) {
+                            $('#txtMorseCode').addClass('is-danger');
+                            $('#txtMorseCode').closest('.field').addClass('is-invalid');
+                        } else {
+                            $('#output').html(decodedText);
+                            $('#btnSpeakMorseCode').removeClass('hide');
+                        }
+                    } else {
+                        $('#txtMorseCode').addClass('is-danger');
+                        $('#txtMorseCode').closest('.field').addClass('is-invalid');
+                    }
+                }
+            });
+
+            function speakMorseCode() {
+                let morseCode = $('#txtMorseCode').val();
+                // console.log(morseCode, playingLetterIndex);
+
+                if (morseCode) {
+                    if (playingLetterIndex == (morseCode.length - 1)) {
+                        playingAudio.pause();
+
+                        playingAudio = undefined;
+
+                        $('#btnSpeakMorseCode').removeClass('is-playing');
+                    } else if (playingLetterIndex < (morseCode.length - 1)) {
+                        playingLetterIndex++;
+
+                        if (typeof(playingAudio) != 'undefined') {
+                            playingAudio.pause();
+                        }
+
+                        if (MORSE_SOUND_EFFECT[morseCode[playingLetterIndex]]) {
+                            const currURLObj = new URL(window.location.href);
+
+                            playingAudio = new Audio(currURLObj.origin + '/assets/audio/morse-code/' + MORSE_SOUND_EFFECT[morseCode[playingLetterIndex]]);
+
+                            playingAudio.onended = function() {
+                                speakMorseCode();
+                            }
+
+                            playingAudio.play();
+                        } else {
+                            setTimeout(speakMorseCode, 500);
+                        }
+                    }
+                }
+            }
+
+            $(document).on('click', '#btnSpeakMorseCode', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if ($(this).hasClass('.is-playing')) {
+                    $(this).removeClass('is-playing');
+                } else {
+                    $(this).addClass('is-playing');
+
+                    playingLetterIndex = -1;
+
+                    speakMorseCode();
+                }
+            });
+
+            $(document).ready(function() {
+                $('#txtMorseCode').val('.... . .-.. .-.. ---').trigger('input');
+            });
+        </script>
+
+    </body>
+</html>
