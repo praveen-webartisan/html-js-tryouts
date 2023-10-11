@@ -1,0 +1,82 @@
+<html>
+    <head>
+        <title>360 &deg;</title>
+
+        <style type="text/css">
+            @font-face {
+                font-family: 'AppFont';
+                src: url('assets/css/fonts/SofiaSans-Regular.ttf');
+            }
+
+            html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                font-family: 'AppFont';
+            }
+
+            #img-wrapper {
+                cursor: grab;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .cloudimage-360 {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .cloudimage-360 .cloudimage-360-inner-box {
+                width: 100%;
+                height: auto;
+            }
+
+            .cloudimage-360 canvas {
+                max-width: 100% !important;
+                height: auto !important;
+            }
+
+            footer {
+                width: 100%;
+                text-align: center;
+            }
+
+            footer p {
+                text-align: center;
+                padding: 1em 0;
+            }
+
+            footer p:first-child {
+                margin-top: 0;
+            }
+
+            @media (orientation: landscape) {
+                .cloudimage-360 .cloudimage-360-inner-box {
+                    width: 50% !important;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="img-wrapper">
+            <div class="cloudimage-360" id="img" data-folder="assets/img/360-deg/pulsar-ns-200/" data-filename-x="{index}.png" data-amount-x="15" data-autoplay data-speed="300" data-spin-reverse="true" data-ratio="1.4"></div>
+        </div>
+
+        <footer>
+            <p>
+                Developed by <a href="https://praveen-webartisan.github.io" target="_blank">Praveen WebArtisan</a>. Using: <a href="https://github.com/scaleflex/js-cloudimage-360-view" target="_blank">JS Cloudimage 360 View</a>.
+            </p>
+        </footer>
+
+        <script type="text/javascript" src="assets/js/js-cloudimage-360-view.min.js"></script>
+        <script type="text/javascript">
+
+        </script>
+    </body>
+</html>
