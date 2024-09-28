@@ -1,0 +1,193 @@
+<html>
+    <head>
+        <title>Wall Clock</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyBpZD0idGVzdFN2ZyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMjggMTI4IiB2aWV3Qm94PSIwIDAgMTI4IDEyOCI+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iNjQiIHgyPSI2NCIgeTE9IjE5Ljc1MSIgeTI9IjExMS45OSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIHN0b3AtY29sb3I9IiNFQ0VGRjEiIG9mZnNldD0iLjMyMTIiLz48c3RvcCBzdG9wLWNvbG9yPSIjQjBCRUM1IiBvZmZzZXQ9IjEiLz48L2xpbmVhckdyYWRpZW50PjxjaXJjbGUgY3g9IjY0IiBjeT0iNjQiIHI9IjYwIiBmaWxsPSJ1cmwoI2EpIi8+PHBhdGggZD0ibTYzLjggNjMuOThoMC40YzIuMSAwIDMuOC0xLjcgMy44LTMuOHYtMzIuNGMwLTIuMS0xLjctMy44LTMuOC0zLjhoLTAuNGMtMi4xIDAtMy44IDEuNy0zLjggMy44djMyLjRjMCAyLjEgMS43IDMuOCAzLjggMy44eiIgZmlsbD0iIzQyNDI0MiIvPjxwYXRoIGQ9Im02My43OCA2My44MSAwLjE5IDAuMzVjMS4wMSAxLjg0IDMuMzIgMi41MiA1LjE2IDEuNTFsMTguOTQtMTAuMzZjMS44NC0xLjAxIDIuNTItMy4zMiAxLjUxLTUuMTZsLTAuMTktMC4zNWMtMS4wMS0xLjg0LTMuMzItMi41Mi01LjE2LTEuNTFsLTE4Ljk0IDEwLjM2Yy0xLjg0IDEuMDEtMi41MiAzLjMyLTEuNTEgNS4xNnoiIGZpbGw9IiM0MjQyNDIiLz48Y2lyY2xlIGN4PSI2NCIgY3k9IjY0IiByPSI3IiBmaWxsPSIjNDI0MjQyIi8+PGNpcmNsZSBjeD0iNjQiIGN5PSI2NCIgcj0iMyIgZmlsbD0iI2ZmZiIvPjxnIGZpbGw9IiM3NTc1NzUiPjxjaXJjbGUgY3g9IjE1Ljg5IiBjeT0iNjQuMTMiIHI9IjQiLz48Y2lyY2xlIGN4PSI2My44OSIgY3k9IjE2LjEzIiByPSI0Ii8+PGNpcmNsZSBjeD0iNjMuODkiIGN5PSIxMTIuMTMiIHI9IjQiLz48Y2lyY2xlIGN4PSIxMTEuODkiIGN5PSI2NC4xMyIgcj0iNCIvPjwvZz48ZyBvcGFjaXR5PSIuMiI+PHBhdGggZD0iTTY0LDhjMzAuODgsMCw1NiwyNS4xMiw1Niw1NnMtMjUuMTIsNTYtNTYsNTZTOCw5NC44OCw4LDY0UzMzLjEyLDgsNjQsOCBNNjQsNCBDMzAuODYsNCw0LDMwLjg2LDQsNjRzMjYuODYsNjAsNjAsNjBzNjAtMjYuODYsNjAtNjBTOTcuMTQsNCw2NCw0TDY0LDR6IiBmaWxsPSIjNDI0MjQyIi8+PC9nPjwvc3ZnPg==" />
+
+        <style type="text/css">
+            html, body {
+                margin: 0 !important;
+                padding: 0 !important;
+                font-family: BlinkMacSystemFont,-apple-system,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+            }
+
+            body {
+                width: 100%;
+                min-height: 100vh;
+                height: 100vh;
+                user-select: none;
+            }
+
+            *.hidden {
+                display: none !important;
+            }
+
+            *.hide-preserve-space {
+                visibility: hidden !important;
+            }
+
+            .wall {
+                width: 100%;
+                height: 100%;
+                background-image: linear-gradient(248deg, rgba(104, 104, 104, 0.05) 0%, rgba(104, 104, 104, 0.05) 33.333%,rgba(12, 12, 12, 0.05) 33.333%, rgba(12, 12, 12, 0.05) 66.666%,rgba(12, 12, 12, 0.05) 66.666%, rgba(12, 12, 12, 0.05) 99.999%),linear-gradient(273deg, rgba(106, 106, 106, 0.05) 0%, rgba(106, 106, 106, 0.05) 33.333%,rgba(51, 51, 51, 0.05) 33.333%, rgba(51, 51, 51, 0.05) 66.666%,rgba(83, 83, 83, 0.05) 66.666%, rgba(83, 83, 83, 0.05) 99.999%),linear-gradient(144deg, rgba(12, 12, 12, 0.05) 0%, rgba(12, 12, 12, 0.05) 33.333%,rgba(220, 220, 220, 0.05) 33.333%, rgba(220, 220, 220, 0.05) 66.666%,rgba(91, 91, 91, 0.05) 66.666%, rgba(91, 91, 91, 0.05) 99.999%),linear-gradient(149deg, rgba(102, 102, 102, 0.05) 0%, rgba(102, 102, 102, 0.05) 33.333%,rgba(75, 75, 75, 0.05) 33.333%, rgba(75, 75, 75, 0.05) 66.666%,rgba(82, 82, 82, 0.05) 66.666%, rgba(82, 82, 82, 0.05) 99.999%),linear-gradient(264deg, rgba(26, 26, 26, 0.05) 0%, rgba(26, 26, 26, 0.05) 33.333%,rgba(222, 222, 222, 0.05) 33.333%, rgba(222, 222, 222, 0.05) 66.666%,rgba(241, 241, 241, 0.05) 66.666%, rgba(241, 241, 241, 0.05) 99.999%),linear-gradient(20deg, rgba(138, 138, 138, 0.05) 0%, rgba(138, 138, 138, 0.05) 33.333%,rgba(174, 174, 174, 0.05) 33.333%, rgba(174, 174, 174, 0.05) 66.666%,rgba(133, 133, 133, 0.05) 66.666%, rgba(133, 133, 133, 0.05) 99.999%),linear-gradient(28deg, rgba(138, 138, 138, 0.05) 0%, rgba(138, 138, 138, 0.05) 33.333%,rgba(2, 2, 2, 0.05) 33.333%, rgba(2, 2, 2, 0.05) 66.666%,rgba(136, 136, 136, 0.05) 66.666%, rgba(136, 136, 136, 0.05) 99.999%),linear-gradient(143deg, rgba(18, 18, 18, 0.05) 0%, rgba(18, 18, 18, 0.05) 33.333%,rgba(203, 203, 203, 0.05) 33.333%, rgba(203, 203, 203, 0.05) 66.666%,rgba(71, 71, 71, 0.05) 66.666%, rgba(71, 71, 71, 0.05) 99.999%),linear-gradient(148deg, rgba(180, 180, 180, 0.05) 0%, rgba(180, 180, 180, 0.05) 33.333%,rgba(25, 25, 25, 0.05) 33.333%, rgba(25, 25, 25, 0.05) 66.666%,rgba(80, 80, 80, 0.05) 66.666%, rgba(80, 80, 80, 0.05) 99.999%),linear-gradient(90deg, rgb(240, 134, 167),rgb(214, 49, 112));
+                position: relative;
+            }
+
+            .clock {
+                width: 15rem;
+                height: 15rem;
+                position: absolute;
+                top: 10%;
+                left: 10%;
+                background: #fff;
+                border-radius: 50%;
+                box-shadow: 1px 2px 10px -2px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                border: 0.8rem solid rgb(214, 49, 112);
+                border-style: inset;
+            }
+
+            .clock::before {
+                content: '';
+                width: 1rem;
+                height: 1rem;
+                background: rgb(214, 49, 112);
+                border-radius: 50%;
+                z-index: 4;
+                position: absolute;
+            }
+
+            .clock .clock-hand {
+                transform-origin: center;
+                position: absolute;
+            }
+
+            .clock .clock-hand::before {
+                content: '';
+                display: inline-block;
+                width: 100%;
+                height: 50%;
+                border-radius: 0.2rem;
+            }
+
+            .clock .hours-hand {
+                width: 0.4rem;
+                height: 50%;
+                z-index: 1;
+            }
+
+            .clock .hours-hand::before {
+                background: #000;
+            }
+
+            .clock .minutes-hand {
+                width: 0.4rem;
+                height: 70%;
+                z-index: 2;
+            }
+
+            .clock .minutes-hand::before {
+                background: #000;
+            }
+
+            .clock .seconds-hand {
+                width: 0.25rem;
+                height: 80%;
+                z-index: 3;
+            }
+
+            .clock .seconds-hand::before {
+                background: rgb(214, 49, 112);
+            }
+
+            .clock .clock-time-numbers-holder {
+                width: 80%;
+                height: 80%;
+                border-radius: 50%;
+                z-index: 10;
+                position: relative;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <div class="wall">
+            <div class="clock">
+                <div class="clock-hand hours-hand hide-preserve-space"></div>
+                <div class="clock-hand minutes-hand hide-preserve-space"></div>
+                <div class="clock-hand seconds-hand hide-preserve-space"></div>
+
+                <div class="clock-time-numbers-holder"></div>
+            </div>
+        </div>
+
+        <!-- TODO: Move all the scripts to wall-clock.js -->
+        <script type="text/javascript">
+            window.addEventListener('load', function() {
+                document.querySelectorAll('.clock').forEach(function(clockElement) {
+                    initiateClock(clockElement);
+                });
+            });
+
+            function initiateClock(clockElement) {
+                let secondsPos = 0;
+
+                if (clockElement.querySelectorAll('.time').length == 0) {
+                    let timeNumbersHolder = clockElement.querySelector('.clock-time-numbers-holder');
+
+                    for(let time = 1; time <= 12; time++) {
+                        let timeElement = document.createElement('div');
+                        let clockRadius = timeNumbersHolder.offsetWidth / 2;
+                        let circleRadius = clockRadius;
+
+                        // let innerSquareSideLength = Math.sqrt(2) * clockRadius;
+                        // circleRadius = innerSquareSideLength/2;
+
+                        let xPos = circleRadius * Math.sin(Math.PI * 2 * (time/12));
+                        let yPos = circleRadius * Math.cos(Math.PI * 2 * (time/12)) * -1;
+
+                        timeElement.innerHTML = time;
+                        timeElement.classList.add('time');
+                        timeElement.style.transform = `translateX(${ xPos }px) translateY(${ yPos }px)`;
+                        timeElement.style.position = 'absolute';
+                        timeElement.style.zIndex = 10 + time;
+
+                        timeNumbersHolder.appendChild(timeElement);
+                    }
+                }
+
+                setInterval(() => {
+                    let now = new Date();
+                    let seconds = now.getSeconds();
+                    let minutes = now.getMinutes();
+                    let hours = now.getHours();
+
+                    clockElement.querySelector('.seconds-hand').style.transform = `rotate(${ seconds/60 * 360 }deg)`;
+                    clockElement.querySelector('.minutes-hand').style.transform = `rotate(${ minutes/60 * 360 }deg)`;
+                    clockElement.querySelector('.hours-hand').style.transform = `rotate(${ hours/12 * 360 }deg)`;
+
+                    if (secondsPos >= 360) {
+                        secondsPos = 0;
+                    } else {
+                        secondsPos += 6;
+                    }
+
+                    if (clockElement.querySelectorAll('.hide-preserve-space').length > 0) {
+                        clockElement.querySelectorAll('.hide-preserve-space').forEach((element) => {
+                            element.classList.remove('hide-preserve-space');
+                        });
+                    }
+                }, 1000);
+            }
+        </script>
+    </body>
+</html>
